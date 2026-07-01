@@ -1,2 +1,0 @@
-# Wedding
-Site for wedding
