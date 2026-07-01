@@ -1,10 +1,25 @@
-function doGet(e) {
-  return HtmlService.createHtmlOutput('<p>Wedding RSVP endpoint is live.</p>');
+function getOrCreateSpreadsheet() {
+  const props = PropertiesService.getScriptProperties();
+  let spreadsheetId = props.getProperty('WEDDING_RSVP_SPREADSHEET_ID');
+  let ss;
+
+  if (spreadsheetId) {
+    try {
+      ss = SpreadsheetApp.openById(spreadsheetId);
+    } catch (error) {
+      ss = SpreadsheetApp.create('Wedding RSVP Responses');
+      props.setProperty('WEDDING_RSVP_SPREADSHEET_ID', ss.getId());
+    }
+  } else {
+    ss = SpreadsheetApp.create('Wedding RSVP Responses');
+    props.setProperty('WEDDING_RSVP_SPREADSHEET_ID', ss.getId());
+  }
+
+  return ss;
 }
 
-function doPost(e) {
+function getOrCreateSheet(ss) {
   const sheetName = 'RSVP Responses';
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
@@ -12,16 +27,29 @@ function doPost(e) {
     sheet.appendRow(['Timestamp', 'Name', 'Email', 'Attendance', 'Message']);
   }
 
-  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const row = [];
+  return sheet;
+}
 
-  row.push(new Date().toISOString());
-  row.push(e.parameter.name || '');
-  row.push(e.parameter.email || '');
-  row.push(e.parameter.attendance || '');
-  row.push(e.parameter.message || '');
+function doGet(e) {
+  return HtmlService.createHtmlOutput('<p>Wedding RSVP endpoint is live.</p>');
+}
 
-  sheet.appendRow(row);
+function doPost(e) {
+  try {
+    const ss = getOrCreateSpreadsheet();
+    const sheet = getOrCreateSheet(ss);
+    const row = [
+      new Date().toISOString(),
+      e.parameter.name || '',
+      e.parameter.email || '',
+      e.parameter.attendance || '',
+      e.parameter.message || ''
+    ];
 
-  return ContentService.createTextOutput('OK');
+    sheet.appendRow(row);
+    return ContentService.createTextOutput('OK');
+  } catch (error) {
+    return ContentService.createTextOutput('Error: ' + error.message)
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
 }
