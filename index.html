@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>John Paul & Dona Marie | Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <a class="logo" href="#home">J ♥ D</a>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#details">Details</a></li>
+        <li><a href="#rsvp">RSVP</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Save the Date</p>
+          <h1>John Paul & Dona Marie</h1>
+          <p class="subtitle">We are getting married</p>
+          <p class="date">October 17, 2026 • Garden Estate, Manila</p>
+          <a href="#rsvp" class="button">RSVP</a>
+        </div>
+      </section>
+
+      <section id="story" class="section">
+        <div class="section-header">
+          <h2>Our Story</h2>
+          <p>
+            Every love story is beautiful, but ours is our favorite. From the
+            moment our paths crossed, our journey has been filled with love,
+            laughter, and unforgettable memories. We are so grateful to celebrate
+            this special milestone with the people we love most.
+          </p>
+        </div>
+      </section>
+
+      <section id="details" class="section section-alt">
+        <div class="section-header">
+          <h2>Wedding Details</h2>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Wedding Date</h3>
+            <p>Saturday, October 17, 2026</p>
+          </div>
+          <div class="card">
+            <h3>Venue</h3>
+            <p>Garden Estate, Manila</p>
+          </div>
+          <div class="card">
+            <h3>Dress Code</h3>
+            <p>Formal Attire</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="countdown" class="section">
+        <div class="section-header">
+          <h2>Countdown</h2>
+          <p>The celebration begins soon. We can’t wait to share this day with you.</p>
+        </div>
+        <div id="timer">
+          <div>
+            <span id="days">--</span>
+            <p>Days</p>
+          </div>
+          <div>
+            <span id="hours">--</span>
+            <p>Hours</p>
+          </div>
+          <div>
+            <span id="minutes">--</span>
+            <p>Minutes</p>
+          </div>
+          <div>
+            <span id="seconds">--</span>
+            <p>Seconds</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="rsvp" class="section section-alt">
+        <div class="section-header">
+          <h2>RSVP</h2>
+          <p>Please let us know if you can join us on our special day.</p>
+        </div>
+        <form id="rsvpForm" class="form">
+          <input type="text" name="name" placeholder="Full Name" required />
+          <input type="email" name="email" placeholder="Email Address" required />
+          <select name="attendance" required>
+            <option value="">Will you attend?</option>
+            <option value="Joyfully Accept">Joyfully Accept</option>
+            <option value="Regretfully Decline">Regretfully Decline</option>
+          </select>
+          <textarea name="message" rows="5" placeholder="Leave us a message..."></textarea>
+          <button type="submit">Send RSVP</button>
+          <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="faq" class="section">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>When is the wedding?</span>
+              <span>+</span>
+            </button>
+            <div class="faq-answer">
+              <p>We will celebrate on Saturday, October 17, 2026.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Where is the venue?</span>
+              <span>+</span>
+            </button>
+            <div class="faq-answer">
+              <p>The ceremony and reception will be held at Garden Estate, Manila.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Can I bring a guest?</span>
+              <span>+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Please refer to your invitation for plus-one information.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>What should I wear?</span>
+              <span>+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Formal attire is appreciated.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <h2>Thank You</h2>
+      <p>Thank you for your love, prayers, and support. We can't wait to celebrate with you.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
