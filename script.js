@@ -39,7 +39,7 @@ if (form && formMessage) {
     formMessage.textContent = "Sending your RSVP...";
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxF6-cHqQvwCdomFDAzfCh6p1cu9T1I-1_XMMazz-bGCk3aG6oJ5a1Nd3hcOHp43D-5Hw/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwhxS2B6TqVqyfaz9w3oPYNa11MArhbcJYhzSvZNWz13BG5tD15ngJ01wWrZeOdtETK_w/exec", {
         method: "POST",
         body: payload,
         headers: {
