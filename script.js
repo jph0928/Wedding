@@ -47,11 +47,17 @@ if (form && formMessage) {
         }
       });
 
-      if (!response.ok) throw new Error("Submission failed");
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        console.error("RSVP submission failed", response.status, responseText);
+        throw new Error("Submission failed");
+      }
 
       formMessage.textContent = "Thank you for your RSVP. We’re so excited to celebrate with you!";
       form.reset();
     } catch (error) {
+      console.error(error);
       formMessage.textContent = "There was a problem sending your RSVP. Please try again.";
     }
   });
