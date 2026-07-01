@@ -30,10 +30,30 @@ const form = document.getElementById("rsvpForm");
 const formMessage = document.getElementById("formMessage");
 
 if (form && formMessage) {
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    formMessage.textContent = "Thank you for your RSVP. We’re so excited to celebrate with you!";
-    form.reset();
+
+    const formData = new FormData(form);
+    const payload = new URLSearchParams(formData);
+
+    formMessage.textContent = "Sending your RSVP...";
+
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycby9xD6zvk53lJ0vO1b2oM6uCAh2M2L2uA4mQ6Vx3x5F6sI2S8Q8gYmNnV0k7/exec", {
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+
+      if (!response.ok) throw new Error("Submission failed");
+
+      formMessage.textContent = "Thank you for your RSVP. We’re so excited to celebrate with you!";
+      form.reset();
+    } catch (error) {
+      formMessage.textContent = "There was a problem sending your RSVP. Please try again.";
+    }
   });
 }
 
