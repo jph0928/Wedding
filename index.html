@@ -111,6 +111,44 @@
         </form>
       </section>
 
+      <section id="gallery" class="section section-alt">
+        <div class="section-header">
+          <h2>Photo Gallery</h2>
+          <p>Moments from our journey — feel free to browse and enjoy.</p>
+        </div>
+        <div class="gallery-grid" id="galleryGrid">
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80" alt="Photo 1"/></button>
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Photo 2"/></button>
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=900&q=80" alt="Photo 3"/></button>
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1474624570575-5f0d2a6f3b19?auto=format&fit=crop&w=900&q=80" alt="Photo 4"/></button>
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1507120410856-1f35574c3b45?auto=format&fit=crop&w=900&q=80" alt="Photo 5"/></button>
+          <button class="gallery-item"><img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80" alt="Photo 6"/></button>
+        </div>
+        <div id="lightbox" class="lightbox" aria-hidden="true">
+          <button class="lightbox-close" id="lightboxClose">×</button>
+          <img id="lightboxImage" src="" alt="" />
+        </div>
+      </section>
+
+      <section id="guestbook" class="section">
+        <div class="section-header">
+          <h2>Guestbook</h2>
+          <p>Leave us a message — we'll read them with smiles.</p>
+        </div>
+        <div class="guestbook-wrap">
+          <form id="guestbookForm" class="form guestbook-form">
+            <input type="text" name="name" placeholder="Your name" required />
+            <textarea name="message" rows="4" placeholder="Write a message..." required></textarea>
+            <button type="submit">Sign Guestbook</button>
+            <p id="guestbookMessage" class="form-message" aria-live="polite"></p>
+          </form>
+
+          <div class="guestbook-entries" id="guestbookEntries">
+            <p class="muted">Loading messages…</p>
+          </div>
+        </div>
+      </section>
+
       <section id="faq" class="section">
         <div class="section-header">
           <h2>Frequently Asked Questions</h2>

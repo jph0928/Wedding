@@ -30,13 +30,47 @@ function getOrCreateSheet(ss) {
   return sheet;
 }
 
+function getOrCreateGuestbookSheet(ss) {
+  const sheetName = 'Guestbook';
+  let sheet = ss.getSheetByName(sheetName);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+    sheet.appendRow(['Timestamp', 'Name', 'Message']);
+  }
+
+  return sheet;
+}
+
 function doGet(e) {
+  if (e && e.parameter && e.parameter.action === 'guestbook') {
+    try {
+      const ss = getOrCreateSpreadsheet();
+      const sheet = getOrCreateGuestbookSheet(ss);
+      const data = sheet.getDataRange().getValues();
+      const rows = (data || []).slice(1).map(function(r) {
+        return { timestamp: r[0], name: r[1], message: r[2] };
+      });
+      return ContentService.createTextOutput(JSON.stringify(rows)).setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
   return HtmlService.createHtmlOutput('<p>Wedding RSVP endpoint is live.</p>');
 }
 
 function doPost(e) {
   try {
     const ss = getOrCreateSpreadsheet();
+
+    if (e && e.parameter && e.parameter.form === 'guestbook') {
+      const gb = getOrCreateGuestbookSheet(ss);
+      const row = [ new Date().toISOString(), e.parameter.name || '', e.parameter.message || '' ];
+      gb.appendRow(row);
+      return ContentService.createTextOutput('OK');
+    }
+
     const sheet = getOrCreateSheet(ss);
     const row = [
       new Date().toISOString(),

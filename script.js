@@ -63,6 +63,91 @@ if (form && formMessage) {
   });
 }
 
+    // --- Guestbook handling and gallery lightbox ---
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwhxS2B6TqVqyfaz9w3oPYNa11MArhbcJYhzSvZNWz13BG5tD15ngJ01wWrZeOdtETK_w/exec";
+
+    // Guestbook: fetch and render
+    async function fetchGuestbook() {
+      const container = document.getElementById("guestbookEntries");
+      try {
+        const res = await fetch(`${GAS_URL}?action=guestbook`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const entries = await res.json();
+        if (!entries.length) {
+          container.innerHTML = '<p class="muted">No messages yet — be the first!</p>';
+          return;
+        }
+
+        container.innerHTML = entries.map(e => (
+          `<div class="guestbook-entry"><p class="guest-name">${escapeHtml(e.name)}</p><p class="guest-message">${escapeHtml(e.message)}</p><p class="guest-time">${new Date(e.timestamp).toLocaleString()}</p></div>`
+        )).join('');
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="muted">Could not load messages.</p>';
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"'`]/g, (s) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
+      })[s]);
+    }
+
+    // Guestbook submit
+    const guestForm = document.getElementById('guestbookForm');
+    const guestMessage = document.getElementById('guestbookMessage');
+    if (guestForm) {
+      guestForm.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        guestMessage.textContent = 'Sending...';
+        const fd = new FormData(guestForm);
+        fd.append('form', 'guestbook');
+        try {
+          const res = await fetch(GAS_URL, { method: 'POST', body: new URLSearchParams(fd), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+          const text = await res.text();
+          if (!res.ok) throw new Error(text || 'Submit failed');
+          guestMessage.textContent = 'Thanks — your message is saved!';
+          guestForm.reset();
+          setTimeout(() => guestMessage.textContent = '', 2500);
+          fetchGuestbook();
+        } catch (err) {
+          console.error(err);
+          guestMessage.textContent = 'There was a problem saving your message.';
+        }
+      });
+    }
+
+    // Gallery lightbox
+    const galleryGrid = document.getElementById('galleryGrid');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    if (galleryGrid && lightbox && lightboxImage) {
+      galleryGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.gallery-item');
+        if (!btn) return;
+        const img = btn.querySelector('img');
+        if (!img) return;
+        lightboxImage.src = img.src;
+        lightboxImage.alt = img.alt || '';
+        lightbox.setAttribute('aria-hidden', 'false');
+        lightbox.classList.add('open');
+      });
+
+      function closeLightbox() {
+        lightboxImage.src = '';
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+      }
+
+      lightboxClose?.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (ev) => { if (ev.target === lightbox) closeLightbox(); });
+    }
+
+    // initialize guestbook
+    fetchGuestbook();
+
 const faqItems = document.querySelectorAll(".faq-item");
 
 faqItems.forEach((item) => {
