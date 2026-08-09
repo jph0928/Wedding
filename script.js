@@ -122,27 +122,81 @@ if (form && formMessage) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightboxImage');
     const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCaption = document.getElementById('lightboxCaption');
 
     if (galleryGrid && lightbox && lightboxImage) {
-      galleryGrid.addEventListener('click', (e) => {
-        const btn = e.target.closest('.gallery-item');
-        if (!btn) return;
+      const items = Array.from(galleryGrid.querySelectorAll('.gallery-item'));
+      let currentIndex = -1;
+
+      function getLargeSrc(img) {
+        try {
+          // Prefer replacing width param to get a larger image
+          return img.src.replace(/w=\d+/, 'w=1600');
+        } catch (e) {
+          return img.src;
+        }
+      }
+
+      function showImage(index) {
+        if (index < 0 || index >= items.length) return;
+        currentIndex = index;
+        const btn = items[index];
         const img = btn.querySelector('img');
-        if (!img) return;
-        lightboxImage.src = img.src;
+        const large = getLargeSrc(img);
+        lightboxImage.src = '';
+        lightboxImage.src = large;
         lightboxImage.alt = img.alt || '';
+        const caption = btn.dataset.caption || img.alt || '';
+        lightboxCaption.textContent = caption;
         lightbox.setAttribute('aria-hidden', 'false');
         lightbox.classList.add('open');
-      });
+        // preload neighbors
+        [index - 1, index + 1].forEach(i => {
+          if (i >= 0 && i < items.length) {
+            const nimg = new Image();
+            nimg.src = getLargeSrc(items[i].querySelector('img'));
+          }
+        });
+      }
 
       function closeLightbox() {
         lightboxImage.src = '';
         lightbox.classList.remove('open');
         lightbox.setAttribute('aria-hidden', 'true');
+        currentIndex = -1;
       }
 
+      galleryGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.gallery-item');
+        if (!btn) return;
+        const idx = items.indexOf(btn);
+        if (idx === -1) return;
+        showImage(idx);
+      });
+
       lightboxClose?.addEventListener('click', closeLightbox);
+      lightboxPrev?.addEventListener('click', () => showImage(currentIndex - 1));
+      lightboxNext?.addEventListener('click', () => showImage(currentIndex + 1));
       lightbox.addEventListener('click', (ev) => { if (ev.target === lightbox) closeLightbox(); });
+
+      // keyboard navigation
+      document.addEventListener('keydown', (ev) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (ev.key === 'Escape') closeLightbox();
+        if (ev.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (ev.key === 'ArrowRight') showImage(currentIndex + 1);
+      });
+
+      // touch swipe support
+      let touchStartX = 0;
+      lightboxImage.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+      lightboxImage.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (dx > 50) showImage(currentIndex - 1);
+        if (dx < -50) showImage(currentIndex + 1);
+      });
     }
 
     // Lazy-load fallback: swap data-srcset into srcset when in view
