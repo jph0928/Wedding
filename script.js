@@ -130,6 +130,15 @@ if (form && formMessage) {
       const items = Array.from(galleryGrid.querySelectorAll('.gallery-item'));
       let currentIndex = -1;
 
+      // ensure accessible labels and titles for thumbnails
+      items.forEach((btn) => {
+        const caption = btn.dataset.caption || btn.querySelector('img')?.alt || '';
+        if (caption) {
+          if (!btn.hasAttribute('aria-label')) btn.setAttribute('aria-label', caption);
+          if (!btn.getAttribute('title')) btn.setAttribute('title', caption);
+        }
+      });
+
       function getLargeSrc(img) {
         try {
           // Prefer replacing width param to get a larger image
