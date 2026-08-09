@@ -145,6 +145,31 @@ if (form && formMessage) {
       lightbox.addEventListener('click', (ev) => { if (ev.target === lightbox) closeLightbox(); });
     }
 
+    // Lazy-load fallback: swap data-srcset into srcset when in view
+    function initLazyImages() {
+      const lazyImages = document.querySelectorAll('img.lazy[data-srcset]');
+      if ('loading' in HTMLImageElement.prototype) {
+        // native lazy supported — just set srcset so browser can pick
+        lazyImages.forEach(img => { img.srcset = img.dataset.srcset; img.classList.remove('lazy'); });
+        return;
+      }
+
+      const obs = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.srcset = img.dataset.srcset;
+            img.classList.remove('lazy');
+            observer.unobserve(img);
+          }
+        });
+      }, { rootMargin: '200px' });
+
+      lazyImages.forEach(img => obs.observe(img));
+    }
+
+    initLazyImages();
+
     // initialize guestbook
     fetchGuestbook();
 
